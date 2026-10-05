@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -73,7 +74,7 @@ public abstract class LauncherJson extends DefaultTask {
         getOutput().convention(getProject().getLayout().getBuildDirectory().file("libs/version.json"));
 
         // TODO: [ForgeDev][Reproduceable] Add helper to get timestamp from latest git commit
-        var timestamp = Util.iso8601Now();
+        var timestamp = Util.mojanFormat(new Date());
         getTimestamp().convention(timestamp);
         getReleaseTime().convention(timestamp);
         getType().convention("release");

@@ -34,6 +34,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -180,6 +181,19 @@ public final class Util extends SharedUtil {
     public static String iso8601(Date self) {
         var format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
         return format.format(self);
+    }
+
+    /// Mojang uses an almost iso8601 format string for their timestamps in their version jsons
+    /// The tomzeone tail is always included even if it's UTC.
+    /// Java uses the shorthand `Z` for the offset when its UTC.
+    /// So force the time into UTC without a tail and write the tail manually.
+    ///
+    /// You can see Mojang's format in the "time" and "releaseTime" fields of
+    /// [26.3's Version.json](https://piston-meta.mojang.com/v1/packages/4fe1aa1ef8da1cb95c5bad1fb98890ca56dd8ca3/26.3.json)
+    public static String mojanFormat(Date time) {
+        var format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return format.format(time) + "-00:00"; // Append the UTC offset of 0
     }
 
     public static <R extends HasConfigurableValue> R finalize(Project project, R ret) {
