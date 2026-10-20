@@ -13,6 +13,7 @@ gradle.beforeProject { Project project ->
             mavenCentral()
             gradlePluginPortal()
             maven project.gradleutils.forgeMaven
+            maven { url = 'https://maven.outlands.top/releases/' }
             //mavenLocal()
         }
     }

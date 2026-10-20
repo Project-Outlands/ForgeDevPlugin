@@ -15,8 +15,8 @@ plugins {
 
 gradleutils.displayName = 'ForgeDev'
 description = "Forge's Gradle plugin to initialize and streamline the development of Minecraft Forge and its loader."
-group = 'net.minecraftforge'
-version = gitversion.tagOffset
+group = 'top.outlands.forgedev'
+version = findProperty('publishVersion') ?: gitversion.tagOffset
 
 println "Version: $version"
 
@@ -82,7 +82,7 @@ gradlePlugin {
 
     plugins {
         register('forgedev') {
-            id = 'net.minecraftforge.forgedev'
+            id = 'top.outlands.forgedev'
             implementationClass = 'net.minecraftforge.forgedev.ForgeDevPlugin'
             displayName = gradleutils.displayName.get()
             description = project.description
@@ -94,6 +94,21 @@ gradlePlugin {
 publishing {
     repositories {
         maven gradleutils.publishingForgeMaven
+
+        // Cleanroom's self-hosted repository. Credentials are supplied through Gradle properties
+        // (-PoutlandsUsername= / -PoutlandsToken=) or the matching ORG_GRADLE_PROJECT_* environment variables.
+        maven {
+            name = 'outlands'
+            url = 'https://maven.outlands.top/releases/'
+            def outlandsUser = findProperty('outlandsUsername')
+            def outlandsToken = findProperty('outlandsToken')
+            if (outlandsUser != null && outlandsToken != null) {
+                credentials {
+                    username = outlandsUser
+                    password = outlandsToken
+                }
+            }
+        }
     }
 
     publications.register('pluginMaven', MavenPublication) {

@@ -11,4 +11,5 @@ public final class Constants {
     public static final String FORGE_MAVEN = "https://maven.minecraftforge.net/";
     public static final String FORGE_FILES = "https://files.minecraftforge.net/";
     public static final String MAVEN_CENTRAL = "https://repo1.maven.org/maven2/";
+    public static final String OUTLANDS_MAVEN = "https://maven.outlands.top/releases/";
 }

@@ -55,6 +55,8 @@ public abstract class MCPBaseImpl implements MCPBase {
         this.mavenizer.getMappingVersionInput().convention(this.getMappingVersion());
         this.mavenizer.getAccessTransformers().convention(this.getAccessTransformers());
         this.mavenizer.getSideAnnotationStrippers().convention(this.getSideAnnotationStrippers());
+        this.mavenizer.getRepositories().convention(this.getRepositories());
+        this.mavenizer.getProcessor().convention(this.getProcessor());
 
         var depFactory = project.getDependencies();
         this.depConfig.getDependencies().addAllLater(getDependencies().map(list -> {

@@ -7,6 +7,7 @@ package net.minecraftforge.forgedev.values;
 import net.minecraftforge.forgedev.ForgeDevPlugin;
 import org.gradle.api.Project;
 import org.gradle.api.file.ConfigurableFileCollection;
+import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.provider.Provider;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +31,11 @@ public abstract class MCPData extends MavenizerData {
     public abstract Property<@NotNull String> getMappingVersionInput();
     public abstract ConfigurableFileCollection getAccessTransformers();
     public abstract ConfigurableFileCollection getSideAnnotationStrippers();
+    /// Additional maven repositories to resolve the MCPConfig artifact from, formatted as {@code name=url}.
+    public abstract ListProperty<String> getRepositories();
+
+    /// Processor tool to run on the patched sources before they are renamed, in maven coordinates.
+    public abstract Property<String> getProcessor();
 
     @Inject
     public MCPData(final Project project, final ForgeDevPlugin plugin, String name) {
@@ -73,6 +79,17 @@ public abstract class MCPData extends MavenizerData {
         for (var file : this.getSideAnnotationStrippers()) {
             ret.add("--sas");
             ret.add(file.getAbsolutePath());
+        }
+
+        for (var repository : this.getRepositories().getOrElse(List.of())) {
+            ret.add("--repositories");
+            ret.add(repository);
+        }
+
+        var processor = this.getProcessor().getOrNull();
+        if (processor != null) {
+            ret.add("--process");
+            ret.add(processor);
         }
         return ret;
     }
