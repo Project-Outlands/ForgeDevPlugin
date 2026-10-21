@@ -14,6 +14,7 @@ import net.minecraftforge.forgedev.publishvalidate.ValidatePublish;
 import net.minecraftforge.forgedev.runs.Run;
 import net.minecraftforge.forgedev.tasks.DownloadHashedFile;
 import net.minecraftforge.forgedev.tasks.MethodCallFinder;
+import net.minecraftforge.forgedev.tasks.Reobf;
 import net.minecraftforge.forgedev.tasks.ValidateDeprecations;
 import net.minecraftforge.forgedev.tasks.checks.Checks;
 import net.minecraftforge.forgedev.tasks.compat.UserdevCompatibility;
@@ -229,6 +230,30 @@ public abstract class ForgeDevExtension {
     public NamedDomainObjectContainer<? extends Run> runs(Action<NamedDomainObjectContainer<? extends Run>> action) {
         action.execute(getRuns());
         return getRuns();
+    }
+    // endregion ===========================================================
+
+    // region Reobf =========================================================
+    // Legacy helper: named -> SRG/obf jar, used to feed binary patch generation
+    // =====================================================================
+    private @Nullable TaskProvider<Reobf> reobf;
+    public TaskProvider<Reobf> getReobf() {
+        if (this.reobf == null) {
+            this.reobf = this.project.getTasks().register("reobf", Reobf.class, task -> {
+                task.setGroup("build");
+                task.setDescription("Reobfuscates a jar to SRG names using the MCP -> SRG mappings of the mcp base.");
+                task.getDisableAbstractParams().convention(false);
+                task.getMappings().convention(this.getProjectLayout().file(
+                    this.getProviders().provider(() -> this.getMcpBase().getMap2Srg().get())
+                ));
+            });
+        }
+        return this.reobf;
+    }
+    public TaskProvider<Reobf> reobf(Action<? super Reobf> action) {
+        var ret = this.getReobf();
+        ret.configure(action);
+        return ret;
     }
     // endregion ===========================================================
 
