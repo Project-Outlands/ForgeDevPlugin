@@ -18,7 +18,8 @@ public final class Tools {
     public static final Tool SHIM = Tool.ofForge("shim", "net.minecraftforge:bootstrap-shim:2.1.8", 8);
     public static final Tool JARCOMPATIBILITYCHECKER = Tool.ofForge("jarcompatibilitychecker", "net.minecraftforge:JarCompatibilityChecker:0.1.28:all", 8);
     public static final Tool SLIMELAUNCHER = Tool.ofForge("slimelauncher", "net.minecraftforge:slime-launcher:0.1.8", 8, "net.minecraftforge.launcher.Main");
-    public static final Tool REOBF = Tool.ofForge("renamer", "net.minecraftforge:renamer:2.0.4:all", 8);
+    // Our fork of Forge's renamer: same tool, plus --loader-space (see Reobf.getLoaderSpace()).
+    public static final Tool REOBF = Tool.of("renamer", "top.outlands:renamer:2.0.5:all", Constants.OUTLANDS_MAVEN, 8);
     public static final Tool GITVERSION = Tool.ofForge("gitversion", "net.minecraftforge:gitversion:0.8.0:fatjar", 17);
 
     // LIBRARIES
